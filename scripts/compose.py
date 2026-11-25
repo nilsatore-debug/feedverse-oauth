@@ -40,7 +40,11 @@ def shadowed(layer_fn, size=(W0, H0), blur=5, alpha=150, off=(0, 3)):
     out = Image.new('RGBA', size, (0, 0, 0, 0)); out.alpha_composite(sh, off); out.alpha_composite(fg)
     return out
 
+FMT = {}
 def fmt(v):
+    if FMT.get('type', 'time') != 'time':
+        dec = FMT.get('decimals', 0); n = round(v, dec) if dec else int(round(v))
+        return f"{FMT.get('prefix', '')}{n:,}{FMT.get('suffix', '')}"
     v = max(1.0, v)
     for lim, div, name in ((60, 1, 'SECOND'), (3600, 60, 'MINUTE'), (86400, 3600, 'HOUR'), (7 * 86400, 86400, 'DAY'),
                            (30 * 86400, 7 * 86400, 'WEEK'), (365.25 * 86400, 30 * 86400, 'MONTH'), (1e30, 365.25 * 86400, 'YEAR')):
@@ -71,9 +75,10 @@ class Overlay:
     def value_at(self, t):
         it = self.state(t)
         if it is None: return None, None
-        i = self.items.index(it); prev = max(1.0, self.items[i - 1]['value'] if i else 1.0)
+        i = self.items.index(it); prev = self.items[i - 1]['value'] if i else it['value']
         u = min(1.0, (t - it['t']) / self.p['counter']['roll']); u = 1 - (1 - u) ** 3
-        return prev * (max(1.0, it['value']) / prev) ** u, it
+        if prev > 0 and it['value'] > 0: return prev * (it['value'] / prev) ** u, it
+        return prev + (it['value'] - prev) * u, it
 
     def block(self, value, it, t):
         sub = it['sub']; vs = fmt(value)
@@ -220,7 +225,7 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('plan'); ap.add_argument('frames'); ap.add_argument('audio'); ap.add_argument('out')
     ap.add_argument('--from', dest='t_from', type=float, default=0.0); ap.add_argument('--until', type=float, default=None)
     ap.add_argument('--scale', type=float, default=1.0)
-    a = ap.parse_args(); plan = json.load(open(a.plan)); fps = plan['fps']
+    a = ap.parse_args(); plan = json.load(open(a.plan)); fps = plan['fps']; FMT.update(plan['counter'].get('format', {}))
     t1 = min(a.until or plan['duration'], plan['duration']); f0, f1 = round(a.t_from * fps), round(t1 * fps)
     W, H = int(W0 * a.scale) // 2 * 2, int(H0 * a.scale) // 2 * 2
     ov = Overlay(plan)

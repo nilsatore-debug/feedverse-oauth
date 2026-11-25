@@ -1157,6 +1157,9 @@ PROPS = {'plant': prop_plant, 'heli': prop_heli, 'ufo': prop_ufo, 'plane': prop_
          'satellites': prop_satellites, 'moon': prop_moon, 'megacube': prop_megacube, 'sun': prop_sun, 'ship': prop_ship,
          'streaks': prop_streaks, 'bigeye': prop_bigeye, 'vines': prop_vines}
 LATE_PROPS = {'robot_rise': prop_robot_rise}
+_EXTRA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'props_extra.py')
+if os.path.exists(_EXTRA):  # per-reel props: define functions and add them to PROPS / LATE_PROPS / BUILDERS
+    exec(open(_EXTRA).read(), globals())
 
 def setup_render(plan, shot, a, res):
     r = SCENE.render; R = plan['render']
