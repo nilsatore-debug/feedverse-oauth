@@ -1179,7 +1179,7 @@ def setup_render(plan, shot, a, res):
         cy.device = dev; print('[render] cycles device', dev, flush=True)
         cy.samples = a.samples or shot.get('samples', R.get('samples', 24)); cy.use_adaptive_sampling = True; cy.adaptive_threshold = 0.05
         cy.use_denoising = True
-        try: cy.denoiser = 'OPTIX' if dev == 'GPU' else 'OPENIMAGEDENOISE'
+        try: cy.denoiser = 'OPENIMAGEDENOISE'; cy.denoising_use_gpu = (dev == 'GPU')
         except Exception: pass
         cy.max_bounces = 4; cy.diffuse_bounces = 2; cy.glossy_bounces = 1; cy.transmission_bounces = 2; cy.transparent_max_bounces = 12
         cy.caustics_reflective = False; cy.caustics_refractive = False
