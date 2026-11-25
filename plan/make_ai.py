@@ -79,7 +79,7 @@ shots.append({'id': 'S01', 'set': 'office', 't0': 2.3, 't1': 7.4, 'set_opts': OF
                           {'type': 'head', 'actor': 'you', 't0': 5.3, 't1': 5.6, 'angle': 8, 'axis': 1},
                           {'type': 'brows', 'actor': 'you', 't0': 5.3, 't1': 5.5, 'dz': 0.014}],
               'camera': cam(42, (2.3, [0.18, -1.05, 1.36], [0, 0.55, 1.27]), (4.74, [0.12, -0.9, 1.34], [0, 0.55, 1.27], 'CONSTANT'),
-                            (4.75, [0.62, 0.86, 1.2], [0.02, -0.07, 0.93]), (7.4, [0.52, 0.7, 1.16], [0.02, -0.07, 0.93]))})
+                            (4.75, [0.6, 0.42, 1.2], [0.0, -0.07, 0.93]), (7.4, [0.52, 0.32, 1.17], [0.0, -0.07, 0.93]))})
 # S02 minute 5: reads the internet
 shots.append({'id': 'S02', 'set': 'office', 't0': 7.4, 't1': 10.0, 'set_opts': OFF_SET, 'actors': OFF_CAST, 'bloom': True,
               'props': [screen([{'t0': 7.4, 't1': 99, 'mode': 'read', 'seed': 3}], i='scr2')],
